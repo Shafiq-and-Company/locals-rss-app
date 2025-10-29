@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Game & Esports RSS
 
-## Getting Started
+This project is a modular RSS dashboard built with the Next.js App Router. It fetches and normalizes multiple gaming and esports outlets, presenting them in a single scrollable list with a crisp black-and-white aesthetic so you can scan the latest headlines at a glance.
 
-First, run the development server:
+### Getting Started
+
+Install dependencies and start the development server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit [http://localhost:3000](http://localhost:3000) to view the dashboard.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Managing feeds
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Feeds are defined in `lib/feeds.ts`. Each feed entry accepts:
 
-## Learn More
+- `id`: unique identifier used for keys and fallback IDs.
+- `title`: display name for the feed tile.
+- `url`: RSS/Atom endpoint.
+- `description` *(optional)*: short blurb shown under the title.
+- `limit` *(optional)*: number of posts to show per feed (defaults to 15).
 
-To learn more about Next.js, take a look at the following resources:
+Add, remove, or reorder entries in that array to control the dashboard. No other files need to change.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Prioritizing keywords
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Update `lib/priorities.ts` to change the list of keywords that receive a higher weighting. Stories whose titles or summaries contain those phrases float to the top of the feed, followed by the most recent items. The interface shows 50 stories at a time—tap **Load more** at the bottom to reveal the next batch.
 
-## Deploy on Vercel
+### How it works
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `lib/rss.ts` handles parsing and normalizing RSS items using `rss-parser`.
+- `components/story-card.tsx` renders individual story cards with source context.
+- `app/page.tsx` loads all configured feeds on the server, merges them into a single ordered stream, and renders the list.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- The site header shows the current time and a theme toggle that flips the palette between high-contrast light and dark modes.
+
+Feel free to extend the UI with filters, search, or persistence once you decide which games, leagues, or creators you want to highlight.
