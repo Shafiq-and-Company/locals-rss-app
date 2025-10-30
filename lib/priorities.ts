@@ -1,61 +1,111 @@
 export const PRIORITY_KEYWORDS: string[] = [
+  "gaming business",
   "gaming industry",
-  "video game business",
-  "game development",
-  "game studios",
-  "publisher acquisition",
-  "gaming acquisitions",
-  "mergers and acquisitions",
-  "esports organizations",
-  "esports business",
+  "game industry",
+  "games industry",
   "gaming market",
   "game market trends",
+  "game industry report",
+  "game industry analysis",
+  "game industry growth",
+  "video game business",
+  "gaming revenue",
   "gaming investment",
   "gaming startups",
   "venture capital gaming",
+  "game studio funding",
+  "game studio acquisition",
+  "studio acquisition",
+  "publisher acquisition",
+  "publisher investment",
   "game publisher",
   "game developer",
-  "gaming company",
-  "gaming industry growth",
-  "esports sponsorship",
-  "esports tournaments",
+  "development studio",
+  "development company",
+  "game financing",
   "game monetization",
+  "game production",
+  "game distribution",
+  "digital distribution",
+  "game publishing deals",
+  "gaming platform",
+  "gaming analytics",
+  "gaming infrastructure",
   "gaming economy",
+  "gaming partnerships",
+  "strategic partnership",
+  "business expansion",
+  "market expansion",
+  "cloud gaming",
+  "subscription service",
   "mobile gaming market",
   "console market",
   "pc gaming market",
-  "gaming analytics",
-  "game streaming",
-  "gaming revenue",
+  "indie game business",
+  "metaverse gaming",
+  "gaming hardware market",
+  "esports business",
+  "esports industry",
+  "esports organization",
+  "esports organizations",
+  "esports team",
   "esports teams",
   "esports leagues",
-  "gaming partnerships",
-  "game studio funding",
-  "esports investment",
-  "gaming ipo",
-  "gaming stocks",
-  "game marketing",
-  "game publishing deals",
-  "gaming platform",
-  "cloud gaming",
-  "game distribution",
-  "gaming mergers",
-  "esports media rights",
-  "esports sponsorship deals",
-  "game industry report",
-  "gaming innovation",
-  "indie game business",
-  "gaming hardware market",
-  "metaverse gaming",
-  "game production",
-  "gaming industry analysis",
-  "esports organization acquisition",
-  "game dev funding",
+  "franchise league",
+  "esports tournaments",
   "esports ecosystem",
   "competitive gaming industry",
+  "esports sponsorship",
+  "esports sponsorship deals",
+  "esports partnership",
+  "esports media rights",
+  "esports investment",
+  "esports revenue",
+  "esports organization acquisition",
+];
+
+const SUPPORTING_KEYWORDS: string[] = [
+  "mergers and acquisitions",
+  "merger",
+  "acquisition",
+  "investment",
+  "funding",
+  "funding round",
+  "seed round",
+  "series a",
+  "series b",
+  "venture capital",
+  "capital raise",
+  "financial results",
+  "quarterly earnings",
+  "earnings report",
+  "earnings call",
+  "fiscal year",
+  "revenue",
+  "profit",
+  "losses",
+  "guidance",
+  "valuation",
+  "ipo",
+  "stock market",
+  "shareholder",
+  "partnership",
+  "sponsorship",
+  "licensing deal",
+  "licensing agreement",
+  "media rights",
+  "brand deal",
+  "strategic review",
+  "restructuring",
+  "expansion",
+  "layoffs",
 ];
 
 const normalizedKeywords = PRIORITY_KEYWORDS.map((keyword) =>
+  keyword.toLowerCase(),
+);
+
+const supportingKeywords = SUPPORTING_KEYWORDS.map((keyword) =>
   keyword.toLowerCase(),
 );
 
@@ -65,8 +115,14 @@ export function getKeywordPriorityScore(text: string | undefined): number {
   let score = 0;
 
   normalizedKeywords.forEach((keyword, index) => {
-    if (lower.includes(keyword)) {
+    if (matchesKeyword(lower, keyword)) {
       score += normalizedKeywords.length - index;
+    }
+  });
+
+  supportingKeywords.forEach((keyword) => {
+    if (matchesKeyword(lower, keyword)) {
+      score += 5;
     }
   });
 
@@ -86,4 +142,17 @@ export function getStoryPriorityScore({
   const summaryScore = getKeywordPriorityScore(summary ?? undefined) * 2;
   const feedScore = getKeywordPriorityScore(feedTitle ?? undefined);
   return titleScore + summaryScore + feedScore;
+}
+
+function matchesKeyword(text: string, keyword: string): boolean {
+  if (keyword.includes(" ")) {
+    return text.includes(keyword);
+  }
+
+  const pattern = new RegExp(`\\b${escapeRegExp(keyword)}\\b`);
+  return pattern.test(text);
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

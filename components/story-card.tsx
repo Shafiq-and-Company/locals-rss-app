@@ -13,6 +13,7 @@ type StoryCardProps = {
 
 export function StoryCard({ story }: StoryCardProps) {
   const publishedLabel = formatDate(story.publishedAt);
+  const summary = getSummarySentence(story.summary);
 
   return (
     <article className="rounded-xl border border-[color:var(--outline)] bg-[color:var(--surface)] p-6 transition hover:bg-[color:var(--surface-hover)]">
@@ -37,16 +38,10 @@ export function StoryCard({ story }: StoryCardProps) {
       >
         {story.title}
       </Link>
-      {story.summary ? (
-        <div className="mt-3 space-y-3 text-sm leading-6 text-[color:var(--muted)]">
-          {story.summary
-            .split(/\n+/)
-            .filter(Boolean)
-            .slice(0, 2)
-            .map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
-        </div>
+      {summary ? (
+        <p className="mt-3 text-sm leading-6 text-[color:var(--muted)]">
+          {summary}
+        </p>
       ) : null}
       <footer className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-[color:var(--muted)]">
         {story.author ? <span>By {story.author}</span> : null}
@@ -66,4 +61,17 @@ function formatDate(dateInput?: string) {
     month: "short",
     day: "numeric",
   }).format(date);
+}
+
+function getSummarySentence(summary?: string) {
+  if (!summary) return undefined;
+
+  const withoutHtml = summary.replace(/<[^>]+>/g, " ");
+  const normalized = withoutHtml.replace(/\s+/g, " ").trim();
+  if (!normalized) return undefined;
+
+  const sentenceMatch = normalized.match(/.*?[.!?](?=\s|$)/);
+  const firstSentence = sentenceMatch ? sentenceMatch[0] : normalized;
+
+  return firstSentence.trim();
 }

@@ -11,6 +11,8 @@ import {
   type NormalizedFeed,
 } from "@/lib/rss";
 
+const RESULTS_LIMIT = 20;
+
 export default async function Home() {
   const feedConfigs = getAllFeeds();
   const feeds = await fetchFeeds(feedConfigs);
@@ -34,12 +36,27 @@ export default async function Home() {
 }
 
 function buildStoryList(feeds: NormalizedFeed[]) {
+  const now = Date.now();
   let order = 0;
-  const decorated = feeds.flatMap((feed) =>
+  type DecoratedStory = {
+    story: StoryCardData;
+    timestamp?: number;
+    priorityScore: number;
+    order: number;
+    dayKey?: string;
+  };
+
+  const decorated: DecoratedStory[] = feeds.flatMap((feed) =>
     feed.items.map((item) => {
-      const timestamp = item.publishedAt
-        ? new Date(item.publishedAt).getTime()
-        : 0;
+      const rawTimestamp =
+        item.publishedAt !== undefined ? Date.parse(item.publishedAt) : undefined;
+      const hasValidTimestamp =
+        typeof rawTimestamp === "number" && !Number.isNaN(rawTimestamp);
+      const timestamp = hasValidTimestamp ? rawTimestamp : undefined;
+      const dayKey =
+        timestamp !== undefined
+          ? new Date(timestamp).toISOString().slice(0, 10)
+          : undefined;
 
       const story: StoryCardData = {
         ...item,
@@ -59,23 +76,61 @@ function buildStoryList(feeds: NormalizedFeed[]) {
         timestamp,
         priorityScore,
         order: order++,
+        dayKey,
       };
     }),
   );
 
-  const sortedStories = decorated
+  const datedStories = decorated.filter(
+    (item) => item.timestamp !== undefined && item.timestamp <= now,
+  );
+
+  const latestTimestamp = datedStories.reduce((max, item) => {
+    return item.timestamp !== undefined && item.timestamp > max
+      ? item.timestamp
+      : max;
+  }, 0);
+
+  const latestDayKey =
+    latestTimestamp > 0
+      ? new Date(latestTimestamp).toISOString().slice(0, 10)
+      : undefined;
+
+  let filteredStories =
+    latestDayKey !== undefined
+      ? datedStories.filter((item) => item.dayKey === latestDayKey)
+      : datedStories;
+
+  if (filteredStories.length === 0) {
+    filteredStories = decorated.filter(
+      (item) => item.timestamp === undefined || item.timestamp <= now,
+    );
+  }
+
+  const sortedStories = [...filteredStories]
     .sort((a, b) => {
       if (b.priorityScore !== a.priorityScore) {
         return b.priorityScore - a.priorityScore;
       }
-      if (b.timestamp !== a.timestamp) {
-        return b.timestamp - a.timestamp;
+      const aTimestamp = a.timestamp ?? 0;
+      const bTimestamp = b.timestamp ?? 0;
+      if (bTimestamp !== aTimestamp) {
+        return bTimestamp - aTimestamp;
       }
       return a.order - b.order;
-    })
-    .map((item) => item.story);
+    });
 
-  return sortedStories;
+  const keywordMatches = sortedStories.filter(
+    (item) => item.priorityScore > 0,
+  );
+  const otherStories = sortedStories.filter(
+    (item) => item.priorityScore <= 0,
+  );
+
+  return keywordMatches
+    .concat(otherStories)
+    .slice(0, RESULTS_LIMIT)
+    .map((item) => item.story);
 }
 
 function ErrorBanner({ errors }: { errors: FeedWithError[] }) {
