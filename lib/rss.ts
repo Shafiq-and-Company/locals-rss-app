@@ -41,7 +41,9 @@ const REQUEST_HEADERS = {
 async function loadFeedXml(url: string): Promise<string> {
   const response = await fetch(url, {
     headers: REQUEST_HEADERS,
-    cache: "no-store",
+    next: {
+      revalidate: 300,
+    },
   });
 
   if (!response.ok) {

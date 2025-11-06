@@ -1,0 +1,5 @@
+export const INITIAL_FEED_BATCH_SIZE = 8;
+export const SUBSEQUENT_FEED_BATCH_SIZE = 8;
+
+export const INITIAL_STORY_LIMIT = 120;
+export const SUBSEQUENT_STORY_LIMIT = 120;

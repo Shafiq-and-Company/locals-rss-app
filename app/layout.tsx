@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Game & Esports RSS Dashboard",
+  title: "Gaming Business & Esports Dashboard",
   description:
-    "Curated gaming and esports headlines aggregated into a single stream.",
+    "Curated feed of gaming business moves, esports org updates, and industry deal flow.",
 };
 
 export default function RootLayout({

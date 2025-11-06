@@ -1,0 +1,114 @@
+[
+  {
+    "id": "gamesindustry-news",
+    "title": "GamesIndustry.biz – News",
+    "url": "https://www.gamesindustry.biz/feed/news",
+    "description": "Daily games business headlines from GamesIndustry.biz.",
+    "limit": 12
+  },
+  {
+    "id": "gamesindustry-data",
+    "title": "GamesIndustry.biz – Data",
+    "url": "https://www.gamesindustry.biz/feed/data",
+    "description": "Market intelligence and sales figures for the games industry.",
+    "limit": 12
+  },
+  {
+    "id": "gamesindustry-features",
+    "title": "GamesIndustry.biz – Features",
+    "url": "https://www.gamesindustry.biz/feed/features",
+    "description": "Deep dives into the people and businesses shaping games.",
+    "limit": 12
+  },
+  {
+    "id": "gamesindustry-opinion",
+    "title": "GamesIndustry.biz – Opinion",
+    "url": "https://www.gamesindustry.biz/feed/opinion",
+    "description": "Editorial perspectives on the games business.",
+    "limit": 12
+  },
+  {
+    "id": "gamesindustry-academy",
+    "title": "GamesIndustry.biz – Academy",
+    "url": "https://www.gamesindustry.biz/feed/academy",
+    "description": "Career advice and studio leadership guidance.",
+    "limit": 10
+  },
+  {
+    "id": "gamesbeat",
+    "title": "VentureBeat GamesBeat",
+    "url": "https://venturebeat.com/feed",
+    "description": "Business of gaming coverage from VentureBeat.",
+    "limit": 15
+  },
+  {
+    "id": "gamedeveloper",
+    "title": "Game Developer",
+    "url": "https://www.gamedeveloper.com/rss.xml",
+    "description": "Game Developer industry analysis and postmortems.",
+    "limit": 15
+  },
+  {
+    "id": "forbes-games",
+    "title": "Forbes – Games",
+    "url": "https://www.forbes.com/innovation/feed2",
+    "description": "Forbes reporting on the business of video games.",
+    "limit": 12
+  },
+  {
+    "id": "esportsinsider",
+    "title": "Esports Insider",
+    "url": "https://esportsinsider.com/feed/",
+    "description": "Global esports business and investment news.",
+    "limit": 15
+  },
+  {
+    "id": "esportsnet",
+    "title": "Esports.net",
+    "url": "https://www.esports.net/feed/",
+    "description": "Esports market developments and industry changes.",
+    "limit": 12
+  },
+  {
+    "id": "dexerto-esports",
+    "title": "Dexerto – Esports",
+    "url": "https://www.dexerto.com/esports/feed",
+    "description": "Updates across major esports leagues and organisations.",
+    "limit": 12
+  },
+  {
+    "id": "invenglobal-esports",
+    "title": "Inven Global – Esports",
+    "url": "https://www.invenglobal.com/rss/esports",
+    "description": "Esports business and team coverage from Inven Global.",
+    "limit": 12
+  },
+  {
+    "id": "gamespot-esports",
+    "title": "GameSpot – Esports",
+    "url": "https://www.gamespot.com/feeds/esports/",
+    "description": "Esports event and organisation coverage from GameSpot.",
+    "limit": 10
+  },
+  {
+    "id": "pcgamer-esports",
+    "title": "PC Gamer – Esports",
+    "url": "https://www.pcgamer.com/tag/esports/feed/",
+    "description": "PC Gamer reporting on esports scenes and tournaments.",
+    "limit": 10
+  },
+  {
+    "id": "hltv",
+    "title": "HLTV",
+    "url": "https://www.hltv.org/news/rss",
+    "description": "Counter-Strike esports team and business moves.",
+    "limit": 10
+  },
+  {
+    "id": "blixgg",
+    "title": "BLIX.GG",
+    "url": "https://blix.gg/news/feed",
+    "description": "BLIX coverage of esports rosters and organisations.",
+    "limit": 10
+  }
+]

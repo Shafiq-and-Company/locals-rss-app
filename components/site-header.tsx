@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 type Theme = "light" | "dark";
@@ -12,6 +14,7 @@ function applyTheme(theme: Theme) {
 }
 
 export function SiteHeader({ title }: { title: string }) {
+  const pathname = usePathname();
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window === "undefined") return "light";
     const stored = window.localStorage.getItem(STORAGE_KEY);
@@ -55,23 +58,53 @@ export function SiteHeader({ title }: { title: string }) {
 
   const nextTheme: Theme = theme === "light" ? "dark" : "light";
   const buttonLabel = theme === "light" ? "Dark Theme" : "Light Theme";
+  const navItems = [
+    { href: "/", label: "Stories" },
+    { href: "/sources", label: "Sources" },
+  ];
 
   return (
-    <header className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-[color:var(--outline)] pb-4">
-      <h1 className="text-3xl font-bold tracking-tight text-[color:var(--foreground)] sm:text-4xl">
-        {title}
-      </h1>
-      <div className="flex items-center gap-4 text-sm text-[color:var(--muted)] sm:text-base">
-        <span aria-live="polite" className="font-mono">
-          <span suppressHydrationWarning>{timeLabel}</span>{" "}
-          <span className="ml-2 text-xs uppercase tracking-[0.3em] text-[color:var(--muted)]">
+    <header className="mb-8 flex flex-col gap-6 border-b border-[color:var(--outline)] pb-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-3xl font-bold tracking-tight text-[color:var(--foreground)] sm:text-4xl">
+          {title}
+        </h1>
+        <nav className="flex flex-wrap gap-2 text-[0.65rem] uppercase tracking-[0.3em] text-[color:var(--muted)] sm:text-xs">
+          {navItems.map((item) => {
+            const isActive =
+              item.href === "/"
+                ? pathname === item.href
+                : pathname.startsWith(item.href);
+            const baseClasses =
+              "rounded-full border border-[color:var(--outline)] px-3 py-1 font-semibold transition hover:text-[color:var(--foreground)] hover:border-[color:var(--accent)]";
+            const activeClasses = isActive
+              ? "bg-[color:var(--surface)] text-[color:var(--foreground)] border-[color:var(--accent)]"
+              : "bg-[color:var(--background)]";
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`${baseClasses} ${activeClasses}`}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+      <div className="flex flex-col items-start gap-3 text-xs text-[color:var(--muted)] sm:flex-row sm:items-center sm:gap-4 sm:text-sm">
+        <span aria-live="polite" className="font-mono leading-5 sm:leading-none">
+          <span suppressHydrationWarning>{timeLabel}</span>
+          <span className="mt-1 block text-[0.65rem] uppercase tracking-[0.3em] text-[color:var(--muted)] sm:ml-2 sm:inline sm:text-xs">
             <span suppressHydrationWarning>{dateLabel}</span>
           </span>
         </span>
         <button
           type="button"
           onClick={() => setTheme(nextTheme)}
-          className="rounded-full border border-[color:var(--outline)] bg-[color:var(--background)] px-4 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--foreground)] transition hover:bg-[color:var(--surface)]"
+          className="w-full rounded-full border border-[color:var(--outline)] bg-[color:var(--background)] px-4 py-2 text-xs font-semibold uppercase tracking-wide text-[color:var(--foreground)] transition hover:bg-[color:var(--surface)] sm:w-auto sm:py-1.5"
           aria-label="Toggle theme"
         >
           <span suppressHydrationWarning>{buttonLabel}</span>
