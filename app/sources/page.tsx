@@ -95,7 +95,17 @@ export default async function SourcesPage({ searchParams }: SourcesPageProps) {
             </div>
           ) : null}
 
-          <div className="overflow-x-auto">
+          <div className="space-y-4 md:hidden">
+            {statuses.map((status) => (
+              <SourceCard
+                key={status.id}
+                status={status}
+                feed={feedConfigs.find((feed) => feed.id === status.id)}
+              />
+            ))}
+          </div>
+
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[32rem] border-collapse text-left text-sm">
               <thead>
                 <tr className="text-xs uppercase tracking-[0.2em] text-[color:var(--muted)]">
@@ -181,6 +191,70 @@ export default async function SourcesPage({ searchParams }: SourcesPageProps) {
         </section>
       </main>
     </div>
+  );
+}
+
+function SourceCard({
+  status,
+  feed,
+}: {
+  status: SourceStatus;
+  feed: FeedConfig | undefined;
+}) {
+  const isHealthy = status.type === "ok";
+
+  return (
+    <article className="rounded-xl border border-[color:var(--outline)] bg-[color:var(--surface)] p-4 text-sm text-[color:var(--foreground)]">
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <Link
+            href={status.feedUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="text-base font-semibold text-[color:var(--foreground)] hover:underline"
+          >
+            {status.title}
+          </Link>
+          <span
+            className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] ${
+              isHealthy
+                ? "bg-[color:var(--success-background,#183d2b)] text-[color:var(--success-foreground,#72f1b8)]"
+                : "bg-[color:var(--error-background,#3d1a1a)] text-[color:var(--error-foreground,#ff9c9c)]"
+            }`}
+          >
+            {isHealthy ? "Online" : "Error"}
+          </span>
+        </div>
+        {status.description ? (
+          <p className="text-xs text-[color:var(--muted)]">{status.description}</p>
+        ) : null}
+      </div>
+
+      <dl className="mt-4 grid grid-cols-2 gap-3 text-xs uppercase tracking-[0.2em] text-[color:var(--muted)]">
+        <div>
+          <dt>Latest Items</dt>
+          <dd className="mt-1 text-sm text-[color:var(--foreground)]">
+            {isHealthy ? status.itemCount : "—"}
+          </dd>
+        </div>
+        <div>
+          <dt>Last Updated</dt>
+          <dd className="mt-1 text-sm text-[color:var(--foreground)]">
+            {isHealthy ? status.lastUpdated ?? "—" : "—"}
+          </dd>
+        </div>
+      </dl>
+
+      {!isHealthy ? (
+        <p className="mt-3 text-xs text-[color:var(--error,#ff9c9c)]">
+          {status.message}
+        </p>
+      ) : null}
+
+      <div className="mt-4">
+        <FeedUrlForm feed={feed} defaultUrl={status.feedUrl} />
+      </div>
+    </article>
   );
 }
 

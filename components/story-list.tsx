@@ -98,7 +98,7 @@ export function StoryList({
     <div className="flex flex-col gap-8">
       <FeedErrorBanner errors={errors} />
 
-      <div className="flex flex-col gap-2 text-xs uppercase tracking-[0.2em] text-[color:var(--muted)]">
+      <div className="flex flex-col gap-2 text-center text-xs uppercase tracking-[0.2em] text-[color:var(--muted)] sm:text-left">
         <span>
           Tracking {stories.length} stories from {loadedFeedCount} of {totalFeeds} feeds
         </span>
@@ -133,7 +133,7 @@ export function StoryList({
           type="button"
           onClick={handleLoadMore}
           disabled={!hasMore || isLoading}
-          className="rounded-full border border-[color:var(--outline)] bg-[color:var(--surface)] px-6 py-2 text-sm font-semibold uppercase tracking-wide text-[color:var(--foreground)] transition hover:bg-[color:var(--surface-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-full border border-[color:var(--outline)] bg-[color:var(--surface)] px-6 py-2 text-sm font-semibold uppercase tracking-wide text-[color:var(--foreground)] transition hover:bg-[color:var(--surface-hover)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
         >
           {isLoading ? "Loading…" : hasMore ? "Load more" : "All feeds loaded"}
         </button>
